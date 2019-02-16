@@ -1,5 +1,15 @@
 import cookieParse from "cookieparser";
 
+export const state = () => ({
+  loading: false
+});
+
+export const mutations = {
+  setLoading(state, payload) {
+    state.loading = payload;
+  }
+};
+
 export const actions = {
   // 在伺服器端先解析用戶cookie取得user資料
   nuxtServerInit({ commit }, { req }) {
@@ -10,5 +20,14 @@ export const actions = {
     }
 
     commit("auth/setUser", user);
+  },
+
+  updateLoading({ commit }, payload) {
+    commit("setLoading", payload);
   }
+};
+
+export const getters = {
+  routerActive: state => state.routerActive,
+  loading: state => state.loading
 };

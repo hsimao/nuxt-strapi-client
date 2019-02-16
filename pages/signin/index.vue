@@ -1,25 +1,21 @@
 <template>
-  <div class="signup">
+  <div class="signin">
     <el-row :gutter="30" type="flex" justify="center">
       <el-col :xs="24" :sm="12">
         <el-form status-icon :rules="rules" ref="ruleForm"
           label-position="top" label-width="80px"
           :model="form">
-          <el-form-item label="姓名" prop="username">
-            <el-input v-model="form.username"></el-input>
-          </el-form-item>
           <el-form-item label="信箱" prop="email">
             <el-input v-model="form.email"></el-input>
           </el-form-item>
           <el-form-item label="密碼" prop="password">
             <el-input type="password" v-model="form.password"></el-input>
           </el-form-item>
-          <el-form-item label="密碼" prop="passwordCheck">
-            <el-input type="password" v-model="form.passwordCheck"></el-input>
-          </el-form-item>
-
           <el-button :disabled="loading" type="primary"
-            @click="submitForm">註冊</el-button>
+            @click="submitForm">登入</el-button>
+          <el-button @click="updateRouter">
+            尚未註冊
+          </el-button>
         </el-form>
       </el-col>
     </el-row>
@@ -28,15 +24,14 @@
 
 <script>
 export default {
-  name: "signup",
+  name: "signin",
   data() {
     return {
       loading: false,
       form: {
         username: "",
         email: "",
-        password: "",
-        passwordCheck: ""
+        password: ""
       },
       rules: {
         username: [
@@ -64,12 +59,6 @@ export default {
             message: "密碼長度須為6~20的字元內",
             trigger: "blur"
           }
-        ],
-        passwordCheck: [
-          {
-            validator: this.checkPasswordFn,
-            trigger: "change"
-          }
         ]
       }
     };
@@ -80,7 +69,6 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           const userData = {
-            username: this.form.username,
             email: this.form.email,
             password: this.form.password
           };
@@ -91,15 +79,10 @@ export default {
         }
       });
     },
-    // 驗證第二次輸入密碼是否相同
-    checkPasswordFn(rule, val, callback) {
-      if (val === "") {
-        callback(new Error("請再次輸入密碼"));
-      } else if (val !== this.form.password) {
-        callback(new Error("兩次密碼輸入不一致"));
-      } else {
-        callback();
-      }
+    updateRouter() {
+      console.log("this.route", this.$route.path);
+      this.$router.push("/signup");
+      this.$store.dispatch("updateRouter", "/signup");
     }
   }
 };
