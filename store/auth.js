@@ -12,6 +12,7 @@ export const mutations = {
     state.user = user;
     console.log("成功", user);
     Cookies.set("user", user);
+    this.$router.push("/");
   },
   logout(state) {
     state.user = null;
@@ -21,12 +22,25 @@ export const mutations = {
 };
 
 export const actions = {
-  async setUser({ commit }, { username, email, password }) {
+  async register({ commit, dispatch }, { username, email, password }) {
     try {
-      const response = await strapi.register(username, email, password);
-      console.log("response ", response);
-      commit("setUser", response.user);
+      const res = await strapi.register(username, email, password);
+      commit("setUser", res.user);
+      dispatch("updateLoading", false, { root: true });
     } catch (err) {
+      dispatch("updateLoading", false, { root: true });
+      alert(err.message || "An error occurred.");
+    }
+  },
+
+  async login({ commit, dispatch }, { email, password }) {
+    try {
+      const res = await strapi.login(email, password);
+      console.log("login: ", res);
+      commit("setUser", res.user);
+      dispatch("updateLoading", false, { root: true });
+    } catch (err) {
+      dispatch("updateLoading", false, { root: true });
       alert(err.message || "An error occurred.");
     }
   }

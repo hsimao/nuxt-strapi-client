@@ -27,7 +27,10 @@ module.exports = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [{ src: "@/plugins/element-ui" }, "@/plugins/strapi"],
+  plugins: [
+    { src: "@/plugins/element-ui", ssr: true },
+    { src: "@/plugins/strapi" }
+  ],
 
   build: {
     /*
@@ -42,6 +45,7 @@ module.exports = {
           exclude: /(node_modules)/
         });
       }
-    }
+    },
+    vendor: ["element-ui"]
   }
 };

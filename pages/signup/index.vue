@@ -1,5 +1,6 @@
 <template>
   <div class="signup">
+
     <el-row :gutter="30" type="flex" justify="center">
       <el-col :xs="24" :sm="12">
         <el-form status-icon :rules="rules" ref="ruleForm"
@@ -23,15 +24,17 @@
         </el-form>
       </el-col>
     </el-row>
+
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "signup",
   data() {
     return {
-      loading: false,
       form: {
         username: "",
         email: "",
@@ -74,9 +77,14 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapGetters({
+      loading: "loading"
+    })
+  },
   methods: {
     submitForm() {
-      // this.loading = true;
+      this.$store.dispatch("updateLoading", true, { root: true });
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           const userData = {
@@ -84,9 +92,10 @@ export default {
             email: this.form.email,
             password: this.form.password
           };
-          this.$store.dispatch("auth/setUser", userData);
+          this.$store.dispatch("auth/register", userData);
         } else {
           console.log("error submit!!");
+          this.$store.dispatch("updateLoading", false, { root: true });
           return false;
         }
       });

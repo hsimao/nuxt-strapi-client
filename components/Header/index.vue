@@ -13,12 +13,15 @@
         <el-menu-item index="2-3">選項3</el-menu-item>
       </el-submenu>
       <el-menu-item index="#">訂單管理</el-menu-item>
-      <el-menu-item v-if="!username" index="/signup">註冊</el-menu-item>
+      <el-menu-item style="margin-left: auto"
+        v-if="!username" index="/signup">註冊</el-menu-item>
       <el-menu-item v-if="!username" index="/signin">登入</el-menu-item>
-      <el-menu-item v-if="username" index="#"
-        @click.prevent="logout">登出
+      <el-menu-item style="margin-left: auto"
+        v-if="username" index="/#" @click="logout">登出
       </el-menu-item>
-      <p v-if="username">Hello {{username}}</p>
+      <li v-if="username">
+        <p class="menu-text">Hello {{username}}</p>
+      </li>
     </el-menu>
   </div>
 </template>

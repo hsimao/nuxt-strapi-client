@@ -13,8 +13,8 @@
           </el-form-item>
           <el-button :disabled="loading" type="primary"
             @click="submitForm">登入</el-button>
-          <el-button @click="updateRouter">
-            尚未註冊
+          <el-button>
+            <nuxt-link to="/signup">尚未註冊</nuxt-link>
           </el-button>
         </el-form>
       </el-col>
@@ -23,20 +23,17 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "signin",
   data() {
     return {
-      loading: false,
       form: {
-        username: "",
         email: "",
         password: ""
       },
       rules: {
-        username: [
-          { required: true, message: "姓名為必填欄位", trigger: "blur" }
-        ],
         email: [
           {
             required: true,
@@ -63,26 +60,27 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapGetters({
+      loading: "loading"
+    })
+  },
   methods: {
     submitForm() {
-      // this.loading = true;
+      this.$store.dispatch("updateLoading", true, { root: true });
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           const userData = {
             email: this.form.email,
             password: this.form.password
           };
-          this.$store.dispatch("auth/setUser", userData);
+          this.$store.dispatch("auth/login", userData);
         } else {
           console.log("error submit!!");
+          this.$store.dispatch("updateLoading", false, { root: true });
           return false;
         }
       });
-    },
-    updateRouter() {
-      console.log("this.route", this.$route.path);
-      this.$router.push("/signup");
-      this.$store.dispatch("updateRouter", "/signup");
     }
   }
 };

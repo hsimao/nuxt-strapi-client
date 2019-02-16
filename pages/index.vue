@@ -11,14 +11,14 @@
 
     <div class="cards" v-for="item in filterList"
       :key="item._id">
-      <a :href="`/restaurants/${item._id}`">
+      <nuxt-link :to="`/restaurants/${item._id}`">
         <el-card shadow="hover" :body-style="{ padding: '0px' }">
           <img :src="item.images[0].url" class="image">
           <div style="padding: 14px;">
             <span>{{item.name}}</span>
           </div>
         </el-card>
-      </a>
+      </nuxt-link>
 
     </div>
   </div>
