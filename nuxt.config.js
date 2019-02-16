@@ -19,9 +19,7 @@ module.exports = {
   /*
    ** Global CSS
    */
-  css: [
-    "element-ui/lib/theme-chalk/index.css"
-  ],
+  css: ["element-ui/lib/theme-chalk/index.css"],
   /*
    ** Build configuration
    */
@@ -29,7 +27,7 @@ module.exports = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [{ src: "@/plugins/element-ui" }],
+  plugins: [{ src: "@/plugins/element-ui" }, "@/plugins/strapi"],
 
   build: {
     /*
