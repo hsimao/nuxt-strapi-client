@@ -21,7 +21,8 @@
           </el-card>
         </div>
       </el-col>
-      <el-col :xs="24" :sm="7" :offset="1" v-if="cartItems.length>0">
+      <el-col :xs="24" :sm="7" :offset="1" class="cart-box"
+        :class="{active: cartItems.length>0}">
         <Cart />
       </el-col>
     </el-row>
