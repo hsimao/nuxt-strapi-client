@@ -3,7 +3,7 @@ export const state = () => ({
 });
 
 export const mutations = {
-  add(state, dish) {
+  setDishes(state, dish) {
     state.list.push(dish);
   },
   emptyList(state) {

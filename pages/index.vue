@@ -11,14 +11,14 @@
 
     <div class="cards" v-for="item in filterList"
       :key="item._id">
-      <nuxt-link :to="`/restaurants/${item._id}`">
+      <a :href="`/restaurants/${item._id}`">
         <el-card shadow="hover" :body-style="{ padding: '0px' }">
           <img :src="item.images[0].url" class="image">
           <div style="padding: 14px;">
             <span>{{item.name}}</span>
           </div>
         </el-card>
-      </nuxt-link>
+      </a>
 
     </div>
   </div>
@@ -29,6 +29,7 @@
 import Strapi from "strapi-sdk-javascript/build/main";
 const apiUrl = process.env.API_URL || "http://localhost:1337";
 const strapi = new Strapi(apiUrl);
+import { mapGetters } from "vuex";
 
 export default {
   name: "AppIndex",
@@ -40,44 +41,22 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      restaurants: "restaurants/list"
+    }),
     filterList() {
       return this.restaurants.filter(restaurant => {
         return restaurant.name
           .toLowerCase()
           .includes(this.form.query.toLowerCase());
       });
-    },
-    restaurants() {
-      return this.$store.getters["restaurants/list"];
     }
   },
   async fetch({ store }) {
-    // 先清空vuex餐廳資料
-    store.commit("restaurants/emptyList");
-    // 使用 strapi sdk 來用 Graphql 跟後端呼叫 API 取得新資料
-    const response = await strapi.request("post", "/graphql", {
-      data: {
-        query: `query {
-          restaurants {
-            _id
-            name
-            desc
-            images {
-              url
-            }
-          }
-        }
-        `
-      }
-    });
-    if (response.data.restaurants.length >= 1) {
-      response.data.restaurants.forEach(item => {
-        // 圖片加上 root 網址
-        item.images.forEach(imageItem => {
-          imageItem.url = `${apiUrl}${imageItem.url}`;
-        });
-        store.commit("restaurants/add", item);
-      });
+    // 判斷當下store是否已經有資料，有就不用重新呼叫api調資料
+    const hasRestaurants = await store.getters["restaurants/list"];
+    if (hasRestaurants.length === 0) {
+      await store.dispatch("restaurants/loadRestaurants");
     }
   }
 };

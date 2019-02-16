@@ -13,7 +13,9 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
+    "cookieparser": "^0.1.0",
     "element-ui": "^2.5.4",
+    "js-cookie": "^2.2.0",
     "nuxt": "^2.0.0",
     "strapi-sdk-javascript": "^0.3.1"
   },

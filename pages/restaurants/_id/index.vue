@@ -1,6 +1,7 @@
 <template>
   <div class="restaurant">
-    <div class="cards">
+    <h1 class="title" v-if="restaurant">{{restaurant.name}}</h1>
+    <div class="cards" v-if="dishes">
       <el-card class="cards" v-for="item in dishes"
         :key="item._id" shadow="hover"
         :body-style="{ padding: '0px' }">
@@ -18,48 +19,38 @@
 import Strapi from "strapi-sdk-javascript/build/main";
 const apiUrl = process.env.API_URL || "http://localhost:1337";
 const strapi = new Strapi(apiUrl);
+import { mapGetters } from "vuex";
 
 export default {
   name: "restaurant",
+  head() {
+    return {
+      title: this.restaurant.name,
+      meta: [
+        {
+          hid: "description",
+          name: "description",
+          content: this.restaurant.desc
+        }
+      ]
+    };
+  },
   mounted() {
-    console.log(this.dishes);
+    // console.log(this.dishes);
+    // console.log(this.restaurant);
   },
   computed: {
+    ...mapGetters({
+      restaurant: "restaurants/restaurant",
+      dishes: "dishes/list"
+    }),
     id() {
       return this.$route.params.id;
-    },
-    dishes() {
-      return this.$store.getters["dishes/list"];
     }
   },
   async fetch({ store, params }) {
-    store.commit("dishes/emptyList");
-    const response = await strapi.request("post", "/graphql", {
-      data: {
-        query: `query {
-          restaurant(id: "5c641132f883a30e73f676a7") {
-            _id
-            name
-            dishes {
-              _id
-              name
-              desc
-              price
-              images {
-                url
-              }
-            }
-          }
-        }
-        `
-      }
-    });
-    response.data.restaurant.dishes.forEach(dish => {
-      dish.images.forEach(imageItem => {
-        imageItem.url = `${apiUrl}${imageItem.url}`;
-      });
-      store.commit("dishes/add", dish);
-    });
+    // 取得餐廳餐點資訊
+    await store.dispatch("restaurants/loadRestaurant", params.id);
   }
 };
 </script>
