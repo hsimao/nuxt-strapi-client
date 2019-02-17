@@ -3,16 +3,15 @@
 
     <el-menu router :default-active="$route.path"
       class="el-menu-demo" mode="horizontal">
-      <el-menu-item index="/">
-        首頁
-      </el-menu-item>
+      <el-menu-item index="/">首頁</el-menu-item>
       <el-submenu index="2">
-        <template slot="title">餐廳</template>
-        <el-menu-item index="2-1">選項1</el-menu-item>
-        <el-menu-item index="2-2">選項2</el-menu-item>
-        <el-menu-item index="2-3">選項3</el-menu-item>
+        <template slot="title">餐廳種類</template>
+        <el-menu-item index="2-1">All</el-menu-item>
+        <el-menu-item index="2-2">速食</el-menu-item>
+        <el-menu-item index="2-3">中餐</el-menu-item>
+        <el-menu-item index="2-4">西餐</el-menu-item>
       </el-submenu>
-      <el-menu-item index="#">訂單管理</el-menu-item>
+      <el-menu-item v-if="username" index="/orders">我的訂單</el-menu-item>
       <el-menu-item style="margin-left: auto"
         v-if="!username" index="/signup">註冊</el-menu-item>
       <el-menu-item v-if="!username" index="/signin">登入</el-menu-item>
@@ -41,9 +40,6 @@ export default {
     logout() {
       this.$store.commit("auth/logout");
     }
-  },
-  mounted() {
-    // console.log(this.$route.name);
   }
 };
 </script>

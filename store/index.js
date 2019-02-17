@@ -1,18 +1,23 @@
 import cookieParse from "cookieparser";
 
 export const state = () => ({
-  loading: false
+  loading: false,
+  forwardRoute: null
 });
 
 export const mutations = {
   setLoading(state, payload) {
     state.loading = payload;
+  },
+  setForwardRoute(state, route) {
+    state.forwardRoute = route;
   }
 };
 
 export const actions = {
-  // 在伺服器端先解析用戶cookie取得user跟購物車cart資料
-  nuxtServerInit({ commit }, { req }) {
+  // 取得初始資料餐廳資訊
+  // 在伺服器端先解析用戶 cookie 取得 user 跟購物車 cart 資料
+  async nuxtServerInit({ commit, dispatch }, { req }) {
     let user = null;
     let cart = [];
     if (req && req.headers && req.headers.cookie) {
@@ -23,6 +28,7 @@ export const actions = {
 
     commit("auth/setUser", user);
     commit("cart/setItems", cart);
+    await dispatch("restaurants/loadRestaurants");
   },
 
   updateLoading({ commit }, payload) {
@@ -31,6 +37,6 @@ export const actions = {
 };
 
 export const getters = {
-  routerActive: state => state.routerActive,
-  loading: state => state.loading
+  loading: state => state.loading,
+  forwardRoute: state => state.forwardRoute
 };

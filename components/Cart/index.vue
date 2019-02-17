@@ -28,7 +28,8 @@
       <span>總計：</span>
       <span>${{totalPrice}}</span>
     </div>
-    <div class="cart-payment">Payment</div>
+    <div v-if="checkoutBtn" class="cart-payment"
+      @click="checkout">Payment</div>
   </div>
 </template>
 
@@ -37,6 +38,12 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "cart",
+  props: {
+    checkoutBtn: {
+      type: Boolean,
+      defalut: true
+    }
+  },
   computed: {
     ...mapGetters({
       cartItems: "cart/items",
@@ -53,6 +60,16 @@ export default {
     },
     removeItem(id) {
       this.$store.commit("cart/removeItem", id);
+    },
+    // 如果尚未登入，將/checkout路由儲存，並轉跳到登入頁
+    checkout() {
+      const isLoaggedIn = this.$store.getters["auth/username"];
+      if (!isLoaggedIn) {
+        this.$store.commit("setForwardRoute", "/checkout");
+        this.$router.push("/signin");
+      } else {
+        this.$router.push("/checkout");
+      }
     }
   }
 };

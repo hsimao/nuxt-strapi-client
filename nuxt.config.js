@@ -15,7 +15,8 @@ module.exports = {
         rel: "stylesheet",
         href: "https://unpkg.com/ionicons@4.1.2/dist/css/ionicons.min.css"
       }
-    ]
+    ],
+    script: [{ src: "https://js.stripe.com/v3" }]
   },
   /*
    ** Customize the progress bar color
@@ -35,7 +36,8 @@ module.exports = {
    */
   plugins: [
     { src: "@/plugins/element-ui", ssr: true },
-    { src: "@/plugins/strapi" }
+    { src: "@/plugins/strapi", ssr: true },
+    { src: "@/plugins/filter", ssr: true }
   ],
 
   build: {

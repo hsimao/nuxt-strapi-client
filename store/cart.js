@@ -1,4 +1,5 @@
 import Cookies from "js-cookie";
+import strapi from "~/plugins/strapi";
 
 export const state = () => ({
   items: []
@@ -10,9 +11,7 @@ export const mutations = {
 
   // 新增前先判斷是否已存在，若存在則新增數量即可
   increase(state, item) {
-    // console.log("yo", item);
     const record = state.items.find(i => i._id === item._id);
-    // console.log("yoyo", record);
 
     if (!record) {
       state.items.push({
@@ -22,8 +21,6 @@ export const mutations = {
     } else {
       record.quantity++;
     }
-    console.log("store items: ", state.items);
-
     Cookies.set("cart", state.items);
   },
 
@@ -46,6 +43,38 @@ export const mutations = {
     const index = state.items.findIndex(i => i._id === id);
     state.items.splice(index, 1);
     Cookies.set("cart", state.items);
+  },
+
+  // 刪除整個購物車
+  emptyCart(state) {
+    state.items = [];
+    Cookies.set("cart", state.items);
+  }
+};
+
+export const actions = {
+  async checkout(
+    { commit, dispatch, getters, rootGetters },
+    { address, postalCode, city, token }
+  ) {
+    try {
+      await strapi.createEntry("orders", {
+        amount: getters.price,
+        dishes: getters.items,
+        address,
+        postalCode,
+        city,
+        userId: rootGetters["auth/user"]._id,
+        token
+      });
+      alert("訂單已成立！");
+      commit("emptyCart");
+      dispatch("updateLoading", false, { root: true });
+      this.$router.push("/orders");
+    } catch (err) {
+      dispatch("updateLoading", false, { root: true });
+      console.log(err);
+    }
   }
 };
 

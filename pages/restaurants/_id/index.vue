@@ -23,7 +23,7 @@
       </el-col>
       <el-col :xs="24" :sm="7" :offset="1" class="cart-box"
         :class="{active: cartItems.length>0}">
-        <Cart />
+        <Cart checkoutBtn />
       </el-col>
     </el-row>
 
@@ -77,6 +77,9 @@ export default {
   async fetch({ store, params }) {
     // 取得餐廳餐點資訊
     await store.dispatch("restaurants/loadRestaurant", params.id);
+    // 因此頁為 SEO 加強頁面，每次都須從 server render vuex 資料將會清空
+    // 所以必須在初始當下一併取得其他 SPA 頁面所需的資料
+    await store.dispatch("restaurants/loadRestaurants");
   },
   methods: {
     limitWordCount(str, count) {

@@ -1,7 +1,6 @@
 // 引入strapi sdk
-import Strapi from "strapi-sdk-javascript/build/main";
+import strapi from "~/plugins/strapi";
 const apiUrl = process.env.API_URL || "http://localhost:1337";
-const strapi = new Strapi(apiUrl);
 
 export const state = () => ({
   list: [],

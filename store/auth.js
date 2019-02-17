@@ -1,7 +1,5 @@
 import Cookies from "js-cookie";
-import Strapi from "strapi-sdk-javascript/build/main";
-const apiUrl = process.env.API_URL || "http://localhost:1337";
-const strapi = new Strapi(apiUrl);
+import strapi from "~/plugins/strapi";
 
 export const state = () => {
   user: null;
@@ -10,14 +8,13 @@ export const state = () => {
 export const mutations = {
   setUser(state, user) {
     state.user = user;
-    console.log("成功", user);
     Cookies.set("user", user);
     this.$router.push("/");
   },
   logout(state) {
     state.user = null;
     Cookies.set("user", null);
-    this.$router.push("/");
+    this.$router.replace("/");
   }
 };
 
@@ -33,12 +30,20 @@ export const actions = {
     }
   },
 
-  async login({ commit, dispatch }, { email, password }) {
+  // 判斷是否有設置 forwardRoute, 有的話登入完後將轉跳到特定頁面
+  async login({ commit, dispatch, rootGetters }, { email, password }) {
+    let nextRoute = "/";
     try {
       const res = await strapi.login(email, password);
-      console.log("login: ", res);
+      // 使用 rootGetters 獲取 store/index.js 內的 getters
+      const forwardRoute = rootGetters.forwardRoute;
+      if (forwardRoute !== null) {
+        nextRoute = forwardRoute;
+        commit("setForwardRoute", null, { root: true });
+      }
       commit("setUser", res.user);
       dispatch("updateLoading", false, { root: true });
+      this.$router.replace(nextRoute);
     } catch (err) {
       dispatch("updateLoading", false, { root: true });
       alert(err.message || "An error occurred.");
@@ -47,5 +52,6 @@ export const actions = {
 };
 
 export const getters = {
-  username: state => state.user && state.user.username
+  username: state => state.user && state.user.username,
+  user: state => state.user
 };

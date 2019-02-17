@@ -11,14 +11,14 @@
 
     <div class="cards" v-for="item in filterList"
       :key="item._id">
-      <nuxt-link :to="`/restaurants/${item._id}`">
+      <a :href="`/restaurants/${item._id}`">
         <el-card shadow="hover" :body-style="{ padding: '0px' }">
           <img :src="item.images[0].url" class="image">
           <div style="padding: 14px;">
             <span>{{item.name}}</span>
           </div>
         </el-card>
-      </nuxt-link>
+      </a>
 
     </div>
   </div>
@@ -49,7 +49,7 @@ export default {
     }
   },
   async fetch({ store }) {
-    // 判斷當下store是否已經有資料，有就不用重新呼叫api調資料
+    // 判斷當下 store 是否已經有資料，有就不用重新呼叫 api 調資料
     const hasRestaurants = await store.getters["restaurants/list"];
     if (hasRestaurants.length === 0) {
       await store.dispatch("restaurants/loadRestaurants");
@@ -61,6 +61,9 @@ export default {
 <style>
 .cards {
   display: flex;
+}
+.cards a {
+  text-decoration: none;
 }
 .el-card {
   width: 30%;

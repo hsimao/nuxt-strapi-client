@@ -1,13 +1,15 @@
 <template>
   <div>
-    <el-container>
-      <el-header>
-        <Header />
-      </el-header>
-      <el-main>
-        <nuxt />
-      </el-main>
-    </el-container>
+    <no-ssr>
+      <el-container>
+        <el-header>
+          <Header />
+        </el-header>
+        <el-main>
+          <nuxt />
+        </el-main>
+      </el-container>
+    </no-ssr>
   </div>
 </template>
 
