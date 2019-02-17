@@ -40,15 +40,15 @@ export const actions = {
         `
       }
     });
-    // if (res.data.restaurants && res.data.restaurants.length >= 1) {
-    res.data.restaurants.forEach(item => {
-      // 圖片加上 root 網址
-      item.images.forEach(imageItem => {
-        imageItem.url = `${apiUrl}${imageItem.url}`;
+    if (res.data.restaurants && res.data.restaurants.length >= 1) {
+      res.data.restaurants.forEach(item => {
+        // 圖片加上 root 網址
+        item.images.forEach(imageItem => {
+          imageItem.url = `${apiUrl}${imageItem.url}`;
+        });
+        commit("setRestaurants", item);
       });
-      commit("setRestaurants", item);
-    });
-    // }
+    }
   },
 
   async loadRestaurant({ commit }, id) {
