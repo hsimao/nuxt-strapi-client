@@ -44,7 +44,9 @@ export const actions = {
       res.data.restaurants.forEach(item => {
         // 圖片加上 root 網址
         item.images.forEach(imageItem => {
-          imageItem.url = `${apiUrl}${imageItem.url}`;
+          // 圖片改成 AWS S3 必須將 apiUrl 移除
+          // imageItem.url = `${apiUrl}${imageItem.url}`;
+          imageItem.url = `${imageItem.url}`;
         });
         commit("setRestaurants", item);
       });
