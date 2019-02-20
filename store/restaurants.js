@@ -42,11 +42,10 @@ export const actions = {
     });
     if (res.data.restaurants && res.data.restaurants.length >= 1) {
       res.data.restaurants.forEach(item => {
-        // 圖片加上 root 網址
+        // 圖片加上 root 網址, 如果圖片是儲存在遠端 (AWS S3) 則不用
         item.images.forEach(imageItem => {
-          // 圖片改成 AWS S3 必須將 apiUrl 移除
-          // imageItem.url = `${apiUrl}${imageItem.url}`;
-          imageItem.url = `${imageItem.url}`;
+          // imageItem.url = `${apiUrl}${imageItem.url}`;  // 本地
+          imageItem.url = `${imageItem.url}`; // AWS S3
         });
         commit("setRestaurants", item);
       });
@@ -80,7 +79,8 @@ export const actions = {
     if (res.data.restaurant && res.data.restaurant.dishes.length >= 1) {
       res.data.restaurant.dishes.forEach(dish => {
         dish.images.forEach(imageItem => {
-          imageItem.url = `${apiUrl}${imageItem.url}`;
+          // imageItem.url = `${apiUrl}${imageItem.url}`; // 本地
+          imageItem.url = `${imageItem.url}`; // AWS S3
         });
         commit("dishes/setDishes", dish, { root: true });
       });
