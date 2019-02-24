@@ -6,10 +6,13 @@
           label-position="top" label-width="80px"
           :model="form">
           <el-form-item label="信箱" prop="email">
-            <el-input v-model="form.email"></el-input>
+            <el-input v-model="form.email"
+              @keyup.enter.native="nextToPassword"></el-input>
           </el-form-item>
           <el-form-item label="密碼" prop="password">
-            <el-input type="password" v-model="form.password"></el-input>
+            <el-input ref="inputPassword" type="password"
+              v-model="form.password"
+              @keyup.enter.native="submitForm"></el-input>
           </el-form-item>
           <el-button :disabled="loading" type="primary"
             @click="submitForm">登入</el-button>
@@ -66,6 +69,10 @@ export default {
     })
   },
   methods: {
+    // 將 input password 設為焦點
+    nextToPassword() {
+      this.$refs.inputPassword.focus();
+    },
     submitForm() {
       this.$store.dispatch("updateLoading", true, { root: true });
       this.$refs.ruleForm.validate(valid => {

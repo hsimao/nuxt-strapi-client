@@ -7,16 +7,22 @@
           label-position="top" label-width="80px"
           :model="form">
           <el-form-item label="姓名" prop="username">
-            <el-input v-model="form.username"></el-input>
+            <el-input @keyup.enter.native="nextInput('inputEmail')"
+              v-model="form.username"></el-input>
           </el-form-item>
           <el-form-item label="信箱" prop="email">
-            <el-input v-model="form.email"></el-input>
+            <el-input @keyup.enter.native="nextInput('inputPassword')"
+              ref="inputEmail" v-model="form.email"></el-input>
           </el-form-item>
           <el-form-item label="密碼" prop="password">
-            <el-input type="password" v-model="form.password"></el-input>
+            <el-input @keyup.enter.native="nextInput('inputPasswordCheck')"
+              ref="inputPassword" type="password"
+              v-model="form.password"></el-input>
           </el-form-item>
-          <el-form-item label="密碼" prop="passwordCheck">
-            <el-input type="password" v-model="form.passwordCheck"></el-input>
+          <el-form-item label="密碼確認" prop="passwordCheck">
+            <el-input @keyup.enter.native="submitForm"
+              ref="inputPasswordCheck" type="password"
+              v-model="form.passwordCheck"></el-input>
           </el-form-item>
 
           <el-button :disabled="loading" type="primary"
@@ -70,6 +76,7 @@ export default {
         ],
         passwordCheck: [
           {
+            required: true,
             validator: this.checkPasswordFn,
             trigger: "change"
           }
@@ -83,6 +90,11 @@ export default {
     })
   },
   methods: {
+    nextInput(target) {
+      const next = this.$refs[target];
+      if (!next || !next.focus) return;
+      this.$refs[target].focus();
+    },
     submitForm() {
       this.$store.dispatch("updateLoading", true, { root: true });
       this.$refs.ruleForm.validate(valid => {
